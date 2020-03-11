@@ -1,10 +1,10 @@
 Package: shinySurvey
-Title: What the Package Does (One Line, Title Case)
+Title: Helpers for running a survey in Shiny
 Version: 0.0.0.9000
 Authors@R: 
     person(given = "Göttingen State and University Library",
            role = c("cph", "fnd"))
-Description: What the package does (one paragraph).
+Description: Run a survey right in shiny.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
