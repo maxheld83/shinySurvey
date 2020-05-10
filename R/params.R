@@ -50,9 +50,9 @@ params_from_gs <- function(sheet,
       ...
     )
     requireNamespace2(x = "datapasta")
-    write(
+    readr::write_file(
       x = datapasta::tribble_construct(input_table = df),
-      file = file
+      path = file
     )
   }
   checkmate::assert_file_exists(x = file)
