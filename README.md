@@ -1,7 +1,7 @@
 # shinySurvey
 
 <!-- badges: start -->
-[![R build status](https://github.com/maxheld83/shinySurvey/workflows/main/badge.svg)](https://github.com/maxheld83/shinySurvey/actions)
+[![R build status](https://github.com/maxheld83/shinySurvey/workflows/main.yaml/badge.svg)](https://github.com/maxheld83/shinySurvey/actions)
 <!-- badges: end -->
 
 
