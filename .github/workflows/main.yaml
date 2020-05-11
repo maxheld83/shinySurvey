@@ -11,8 +11,6 @@ jobs:
     env:
       # this freezes the package versions
       RSPM: "https://packagemanager.rstudio.com/cran/__linux__/bionic/279"
-      # used for installing private repos
-      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
     container:
       # this freezes the r version
       image: "rstudio/r-base:4.0-bionic"
@@ -60,4 +58,4 @@ jobs:
         uses: maxheld83/ghpages@v0.2.0
         env:
          BUILD_DIR: docs
-         GH_PAT: ${{ secrets.GH_PAT_GHPAGES }}
+         GH_PAT: ${{ secrets.GITHUB_TOKEN }}
