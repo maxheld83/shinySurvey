@@ -14,7 +14,7 @@ test_that("downloading from gs works", {
 })
 
 test_that("named vectors are created", {
-  df_wrong <- data.frame(
+  df_wrong <- tibble::tibble(
     short = c("f", "b"),
     long = c("foo", "bar")
   )
