@@ -35,12 +35,10 @@ jobs:
         env:
           RHUB_PLATFORM: linux-x86_64-ubuntu-gcc
         run: |
-          Rscript -e "remotes::install_github('r-hub/sysreqs', ref='3860f2b512a9c3bd3db6791c2ff467a1158f4048')"
           sysreqs=$(Rscript -e "cat(sysreqs::sysreq_commands('DESCRIPTION'))")
           sudo -s eval "$sysreqs"
       - name: Install Package Dependencies
         run: |-
-          install.packages('remotes', repos = Sys.getenv('RSPM'))
           remotes::install_deps(dependencies = TRUE, repos = Sys.getenv('RSPM'))
         shell: Rscript {0}
       - name: Check
