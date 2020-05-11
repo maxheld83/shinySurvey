@@ -11,6 +11,8 @@ jobs:
     env:
       # this freezes the package versions
       RSPM: "https://packagemanager.rstudio.com/cran/__linux__/bionic/279"
+      # unfortunately this has to be updated by hand
+      LIB_PATH: "/opt/R/4.0.0/lib/R/library"
     container:
       # this freezes the r version
       image: "rstudio/r-base:4.0-bionic"
@@ -26,7 +28,7 @@ jobs:
         uses: actions/cache@v1
         with:
           # unfortunately this has to be updated by hand
-          path: "/opt/R/4.0.0/lib/R/library"
+          path: ${{ env.LIB_PATH }}
           key: ${{ env.RSPM }}-${{ hashFiles('.github/depends.Rds') }}
           restore-keys: ${{ env.RSPM }}-
       - name: Install System dependencies
