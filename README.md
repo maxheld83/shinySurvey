@@ -1,25 +1,14 @@
-
 # shinySurvey
 
 <!-- badges: start -->
+[![R build status](https://github.com/maxheld83/shinySurvey/workflows/main/badge.svg)](https://github.com/maxheld83/shinySurvey/actions)
 <!-- badges: end -->
 
-The goal of shinySurvey is to ...
 
 ## Installation
 
-You can install the released version of shinySurvey from [CRAN](https://CRAN.R-project.org) with:
+You can install the released version of shinySurvey from GitHub with:
 
 ``` r
-install.packages("shinySurvey")
+remotes::install_github("maxheld83/shinySurvey")
 ```
-
-## Example
-
-This is a basic example which shows you how to solve a common problem:
-
-``` r
-library(shinySurvey)
-## basic example code
-```
-

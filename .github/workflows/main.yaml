@@ -1,41 +1,67 @@
 name: CICD
 
-"on":
-  - push
-  - pull_request
+on:
+  push:
+  pull_request:
+    types: [assigned, opened, synchronize, reopened]
+  release:
+    types: [published, created, edited]
 
 jobs:
-  build:
+  cicd:
     runs-on: ubuntu-18.04
+    env:
+      # this freezes the r version
+      DOCKER_IMG: "rstudio/r-base:4.0-bionic"
+      # this freezes the package versions
+      RSPM: "https://packagemanager.rstudio.com/all/__linux__/bionic/279"
+      # used for installing private repos
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
     container:
-      image: rstudio/r-base:3.6-bionic
+      image: ${{ env.DOCKER_IMG }}
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v1
-      - name: Install System Dependencies
+      - uses: actions/checkout@v2
+      - name: Query dependencies
         run: |
-          sudo apt-get update && apt-get install -y --no-install-recommends \
-          libxml2-dev \
-          libssl-dev \
-          libcurl4-openssl-dev
+          options(warn = 2)
+          install.packages('remotes', repos = Sys.getenv("RSPM"))
+          saveRDS(remotes::dev_package_deps(dependencies = TRUE, repos = Sys.getenv("RSPM")), ".github/depends.Rds", version = 2)
+        shell: Rscript {0}
+      - name: Cache R packages
+        uses: actions/cache@v1
+        with:
+          # unfortunately this has to be updated by hand
+          path: "/opt/R/4.0.0/lib/R/library"
+          key: ${{ env.DOCKER_IMG }}-${{ hashFiles('.github/depends.Rds') }}
+          restore-keys: ${{ env.DOCKER_IMG }}-
+      - name: Install System dependencies
+        env:
+          RHUB_PLATFORM: linux-x86_64-ubuntu-gcc
+        run: |
+          Rscript -e "remotes::install_github('r-hub/sysreqs', ref='3860f2b512a9c3bd3db6791c2ff467a1158f4048')"
+          sysreqs=$(Rscript -e "cat(sysreqs::sysreq_commands('DESCRIPTION'))")
+          sudo -s eval "$sysreqs"
       - name: Install Package Dependencies
         run: |-
-          Rscript -e "install.packages('remotes', repos = 'https://demo.rstudiopm.com/all/__linux__/bionic/latest')"
-          Rscript -e "remotes::install_deps(dependencies = TRUE, repos = 'https://demo.rstudiopm.com/all/__linux__/bionic/latest')"
-      - name: Check Package
-        run: Rscript -e "rcmdcheck::rcmdcheck(error_on = 'error', check_dir = 'check')"
-      - name: Run Code Coverage
-        run: Rscript -e "covr::codecov(quiet = FALSE, commit = '$GITHUB_SHA', branch = '$GITHUB_REF', token = '${{ secrets.CODECOV_TOKEN }}')"
-      - name: Document Package
+          install.packages('remotes', repos = Sys.getenv('RSPM'))
+          remotes::install_deps(dependencies = TRUE, repos = Sys.getenv('RSPM'))
+        shell: Rscript {0}
+      - name: Check
+        env:
+          _R_CHECK_CRAN_INCOMING_REMOTE_: false
         run: |
-          Rscript -e "pkgdown::build_site(override = list(devel = FALSE, external = FALSE))"
-      - name: Get system dependencies for github pages deploy
-        run: apt-get update -y && apt-get install -y ssh rsync
-      - name: Deploy pkgdown website to root
+          rcmdcheck::rcmdcheck(args = c("--no-manual", "--as-cran"), error_on = "warning", check_dir = "check")
+        shell: Rscript {0}
+      - name: Test coverage
+        run: covr::codecov()
+        shell: Rscript {0}
+      - name: Build Package Website
+        run: |
+          pkgdown::build_site(override = list(new_process = FALSE))
+        shell: Rscript {0}
+      - name: Deploy to GitHub Pages
         if: github.ref == 'refs/heads/master'
-        uses: JamesIves/github-pages-deploy-action@releases/v3
-        with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          ACCESS_TOKEN: ${{ secrets.GH_PAT_GHPAGES }}
-          BRANCH: gh-pages # The branch the action should deploy to.
-          FOLDER: docs # The folder the action should deploy.
+         uses: maxheld83/ghpages@v0.2.0
+         env:
+           BUILD_DIR: docs
+           GH_PAT: ${{ secrets.GH_PAT_GHPAGES }}
