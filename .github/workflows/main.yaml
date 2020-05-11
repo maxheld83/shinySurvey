@@ -29,9 +29,13 @@ jobs:
       - name: Document Package
         run: |
           Rscript -e "pkgdown::build_site(override = list(devel = FALSE, external = FALSE))"
-      - name: Deploy to GitHub Pages
+      - name: Get system dependencies for github pages deploy
+        run: apt-get update -y && apt-get install -y ssh rsync
+      - name: Deploy pkgdown website to root
         if: github.ref == 'refs/heads/master'
-        uses: maxheld83/ghpages@v0.2.0
-        env:
-          BUILD_DIR: docs
-          GH_PAT: ${{ secrets.GH_PAT_GHPAGES }}
+        uses: JamesIves/github-pages-deploy-action@releases/v3
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ACCESS_TOKEN: ${{ secrets.GH_PAT_GHPAGES }}
+          BRANCH: gh-pages # The branch the action should deploy to.
+          FOLDER: docs # The folder the action should deploy.
