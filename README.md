@@ -9,6 +9,6 @@
 
 You can install the released version of shinySurvey from GitHub with:
 
-``` r
+```r
 remotes::install_github("maxheld83/shinySurvey")
 ```
