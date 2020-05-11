@@ -58,3 +58,19 @@ params_from_gs <- function(sheet,
   checkmate::assert_file_exists(x = file)
   source(file = file)$value
 }
+
+#' Convert data frame to named vector
+#'
+#' `deframe2` converts two-column data frames to a named vector, using the first column as the value and the second column as the name.
+#' *This is the opposite behavior of [tibble::deframe()]*.
+#' Such named vectors are often useful for [shiny::selectInput()] and others.
+#'
+#' @inheritParams tibble::deframe
+#'
+#' @export
+deframe2 <- function(x) {
+  if (ncol(x)==2) {
+    x <- x[, c(2, 1)]
+  }
+  tibble::deframe(x)
+}

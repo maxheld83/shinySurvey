@@ -13,10 +13,13 @@ test_that("downloading from gs works", {
   )
 })
 
-test_that("paths from all mds are found", {
-  checkmate::expect_file_exists(
-    x = strings_from_mdfile(
-      path = system.file("markdowns", package = "shinySurvey")
-    )
+test_that("named vectors are created", {
+  df_wrong <- data.frame(
+    short = c("f", "b"),
+    long = c("foo", "bar")
+  )
+  expect_equal(
+    object = deframe2(df_wrong),
+    expected = c(foo = "f", bar = "b")
   )
 })
