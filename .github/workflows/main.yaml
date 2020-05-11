@@ -27,7 +27,6 @@ jobs:
       - name: Cache R packages
         uses: actions/cache@v1
         with:
-          # unfortunately this has to be updated by hand
           path: ${{ env.LIB_PATH }}
           key: ${{ env.RSPM }}-${{ hashFiles('.github/depends.Rds') }}
           restore-keys: ${{ env.RSPM }}-
