@@ -9,14 +9,13 @@ jobs:
   cicd:
     runs-on: ubuntu-18.04
     env:
-      # this freezes the r version
-      DOCKER_IMG: "rstudio/r-base:4.0-bionic"
       # this freezes the package versions
       RSPM: "https://packagemanager.rstudio.com/all/__linux__/bionic/279"
       # used for installing private repos
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
     container:
-      image: ${{ env.DOCKER_IMG }}
+      # this freezes the r version
+      image: "rstudio/r-base:4.0-bionic"
     steps:
       - uses: actions/checkout@v2
       - name: Query dependencies
@@ -30,8 +29,8 @@ jobs:
         with:
           # unfortunately this has to be updated by hand
           path: "/opt/R/4.0.0/lib/R/library"
-          key: ${{ env.DOCKER_IMG }}-${{ hashFiles('.github/depends.Rds') }}
-          restore-keys: ${{ env.DOCKER_IMG }}-
+          key: ${{ env.RSPM }}-${{ hashFiles('.github/depends.Rds') }}
+          restore-keys: ${{ env.RSPM }}-
       - name: Install System dependencies
         env:
           RHUB_PLATFORM: linux-x86_64-ubuntu-gcc
