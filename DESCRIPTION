@@ -29,7 +29,4 @@ Suggests:
     testthat (>= 2.1.0),
     datapasta (>= 3.1.0),
     googlesheets4 (>= 0.1.0),
-    shiny (>= 1.4.0.2),
-    sysreqs (>= 1.0.0.9000)
-Remotes:  
-    r-hub/sysreqs@3860f2b512a9c3bd3db6791c2ff467a1158f4048
+    shiny (>= 1.4.0.2)
