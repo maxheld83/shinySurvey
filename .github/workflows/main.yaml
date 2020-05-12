@@ -10,19 +10,19 @@ jobs:
     runs-on: ubuntu-18.04
     env:
       # this freezes the package versions
-      RSPM: "https://packagemanager.rstudio.com/cran/__linux__/bionic/279"
+      RSPM: "https://packagemanager.rstudio.com/all/__linux__/bionic/279"
       # unfortunately this has to be updated by hand
-      LIB_PATH: "/opt/R/4.0.0/lib/R/library"
+      LIB_PATH: "/usr/local/lib/R/site-library"
     container:
       # this freezes the r version
-      image: "rstudio/r-base:4.0-bionic"
+      image: "rocker/rstudio:3.6.3-ubuntu18.04"
     steps:
       - uses: actions/checkout@v2
       - name: Query dependencies
         run: |
           options(warn = 2)
-          install.packages('remotes', repos = Sys.getenv("RSPM"))
-          saveRDS(remotes::dev_package_deps(dependencies = TRUE, repos = Sys.getenv("RSPM")), ".github/depends.Rds", version = 2)
+          install.packages('remotes', repos = Sys.getenv('RSPM'))
+          saveRDS(remotes::dev_package_deps(dependencies = TRUE, repos = Sys.getenv('RSPM')), ".github/depends.Rds", version = 2)
         shell: Rscript {0}
       - name: Cache R packages
         uses: actions/cache@v1
@@ -34,7 +34,10 @@ jobs:
         env:
           RHUB_PLATFORM: linux-x86_64-ubuntu-gcc
         run: |
-          Rscript -e "remotes::install_github('r-hub/sysreqs', ref='3860f2b512a9c3bd3db6791c2ff467a1158f4048')"
+          # hack-fix for https://github.com/r-hub/sysreqsdb/issues/77
+          apt update && apt install -y software-properties-common
+          add-apt-repository ppa:cran/libgit2
+          Rscript -e "remotes::install_github('r-hub/sysreqs', ref='3860f2b512a9c3bd3db6791c2ff467a1158f4048', repos = Sys.getenv('RSPM'))"
           sysreqs=$(Rscript -e "cat(sysreqs::sysreq_commands('DESCRIPTION'))")
           sudo -s eval "$sysreqs"
       - name: Install Package Dependencies
@@ -45,11 +48,14 @@ jobs:
         env:
           _R_CHECK_CRAN_INCOMING_REMOTE_: false
         run: |
-          rcmdcheck::rcmdcheck(args = c("--no-manual", "--as-cran"), error_on = "warning", check_dir = "check")
+          rcmdcheck::rcmdcheck(args = c("--no-manual"), error_on = "warning", check_dir = "check")
         shell: Rscript {0}
       - name: Test coverage
         run: covr::codecov()
         shell: Rscript {0}
+      - name: Copy dependencies to working directory
+        run: |
+          cp --recursive --force ${{ env.LIB_PATH }}/* .deps/
       - name: Build Package Website
         run: |
           pkgdown::build_site(override = list(new_process = FALSE))
