@@ -13,6 +13,7 @@ jobs:
       RSPM: "https://packagemanager.rstudio.com/all/__linux__/bionic/279"
       # unfortunately this has to be updated by hand
       LIB_PATH: "/usr/local/lib/R/site-library"
+      TZ: "UTC"
     container:
       # this freezes the r version
       image: "rocker/rstudio:3.6.3-ubuntu18.04"
