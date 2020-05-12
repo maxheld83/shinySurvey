@@ -5,3 +5,6 @@ authors:
 template:
   params:
     bootswatch: cosmo
+    docsearch:
+      api_key: 583b2ffef107ab107b6c830882a47784
+      index_name: shinysurvey
