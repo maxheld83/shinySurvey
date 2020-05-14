@@ -48,7 +48,7 @@ jobs:
         env:
           _R_CHECK_CRAN_INCOMING_REMOTE_: false
         run: |
-          rcmdcheck::rcmdcheck(args = c("--no-manual"), error_on = "warning", check_dir = "check")
+          rcmdcheck::rcmdcheck(args = c("--no-manual"), check_dir = "check")
         shell: Rscript {0}
       - name: Test coverage
         run: covr::codecov()
@@ -60,17 +60,6 @@ jobs:
         run: |
           pkgdown::build_site(override = list(new_process = FALSE))
         shell: Rscript {0}
-      - name: Build and push docker image
-        uses: docker/build-push-action@v1
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_TOKEN }}
-          repository: subugoe/metar
-          tag_with_sha: true
-          tag_with_ref: true
-          add_git_labels: true
-          tags: ${{ github.sha }}
-          push: ${{ github.event_name != 'pull_request' }}
       - name: Deploy to GitHub Pages
         if: github.ref == 'refs/heads/master'
         uses: maxheld83/ghpages@v0.2.0
