@@ -13,13 +13,11 @@ params_from_gs(
 )
 }
 \arguments{
-\item{sheet}{Sheet to read, as in "worksheet" or "tab". Either a string (the
-name of a sheet), or an integer (the position of the sheet). Ignored if the
-sheet is specified via \code{range}. If neither argument specifies the sheet,
-defaults to the first visible sheet.}
+\item{sheet}{Sheet to read, in the sense of "worksheet" or "tab". You can identify a sheet by name, with a string, or by position, with a number. Ignored if the sheet is specified via \code{range}. If neither argument specifies the sheet, defaults to the first visible sheet.}
 
 \item{ss}{Something that identifies a Google Sheet: its file ID, a URL from
-which we can recover the ID, or a \code{\link[googledrive:dribble]{dribble}}, which
+which we can recover the ID, an instance of \code{googlesheets4_spreadsheet}
+(returned by \code{\link[googlesheets4:gs4_get]{gs4_get()}}), or a \code{\link[googledrive:dribble]{dribble}}, which
 is how googledrive represents Drive files. Processed through
 \code{\link[googlesheets4:as_sheets_id]{as_sheets_id()}}.}
 
