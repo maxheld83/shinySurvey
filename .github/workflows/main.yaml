@@ -53,9 +53,6 @@ jobs:
       - name: Test coverage
         run: covr::codecov()
         shell: Rscript {0}
-      - name: Copy dependencies to working directory
-        run: |
-          cp --recursive --force ${{ env.LIB_PATH }}/* .deps/
       - name: Build Package Website
         run: |
           pkgdown::build_site(override = list(new_process = FALSE))
