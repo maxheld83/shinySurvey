@@ -2,4 +2,5 @@
 
 export(deframe2)
 export(params_from_gs)
+export(pseudonyms)
 export(strings_from_mdfile)
