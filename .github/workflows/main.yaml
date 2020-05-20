@@ -28,8 +28,8 @@ jobs:
         with:
           path: ${{ env.LIB_PATH }}
           # key must be manually updated to match snapshot
-          key: 279-${{ hashFiles('.github/depends.Rds') }}
-          restore-keys: 279-
+          key: 283-${{ hashFiles('.github/depends.Rds') }}
+          restore-keys: 283-
       - name: Install System dependencies
         env:
           RHUB_PLATFORM: linux-x86_64-ubuntu-gcc
