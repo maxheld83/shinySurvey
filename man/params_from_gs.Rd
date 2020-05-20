@@ -8,7 +8,7 @@ params_from_gs(
   sheet,
   ss = getOption("shinySurvey.ss"),
   dir = getOption("shinySurvey.dir"),
-  update = googlesheets4::sheets_has_token(),
+  update = googlesheets4::gs4_has_token(),
   ...
 )
 }
@@ -27,7 +27,7 @@ Should be under version control.}
 
 \item{update}{\verb{[logical(1)]}
 giving whether the file in \code{dir} should be updated.
-Under the default \code{\link[googlesheets4:sheets_has_token]{googlesheets4::sheets_has_token()}}, the data will be updated whenever a token is available.}
+Under the default \code{\link[googlesheets4:gs4_has_token]{googlesheets4::gs4_has_token()}}, the data will be updated whenever a token is available.}
 
 \item{...}{
   Arguments passed on to \code{\link[googlesheets4:read_sheet]{googlesheets4::read_sheet}}
@@ -73,7 +73,7 @@ for \code{.name_repair} as documented in \code{\link[tibble:tibble]{tibble::tibb
 A \link[tibble:tibble-package]{tibble}
 }
 \description{
-When \code{\link[googlesheets4:sheets_has_token]{googlesheets4::sheets_has_token()}}, returns updated \code{ss} from \code{sheet}, otherwise local copy from last run.
+When \code{\link[googlesheets4:gs4_has_token]{googlesheets4::gs4_has_token()}}, returns updated \code{ss} from \code{sheet}, otherwise local copy from last run.
 See \code{\link[googlesheets4:read_sheet]{googlesheets4::read_sheet()}} for details.
 }
 \section{Storing parameters on goooglesheets}{
@@ -87,7 +87,7 @@ To use this function:
 \enumerate{
 \item Set up a Google Spreadsheet; authorize collaborators and optionally add write protections and notifications for the developer where appropriate.
 \item Let collaborators edit the Google Spreadsheet.
-\item Whenever an edit has been made, the developing collaborator can pull updates from Google Spreadsheets using this function from her local development machine (or wherever (\code{\link[googlesheets4:sheets_has_token]{googlesheets4::sheets_has_token()}}) and commit the result as a deparsed tibble.
+\item Whenever an edit has been made, the developing collaborator can pull updates from Google Spreadsheets using this function from her local development machine (or wherever (\code{\link[googlesheets4:gs4_has_token]{googlesheets4::gs4_has_token()}}) and commit the result as a deparsed tibble.
 }
 
 Ensure that changing entry parameters will not compromise data collection, the database schema or analysis.
